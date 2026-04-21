@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineLog — Series Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">CineLog</span>
+      </div>
+      <nav class="header-actions">
+        <button class="btn btn-ghost" id="btn-export-csv">Export CSV</button>
+        <button class="btn btn-primary" id="btn-add-series">+ Add Series</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Filters Bar ── -->
+  <section class="filters-bar">
+    <div class="filters-inner">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 20 20" fill="none">
+          <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="search-input" class="search-input" placeholder="Search series…" />
+      </div>
+      <div class="filter-controls">
+        <select id="sort-select" class="select-input">
+          <option value="id">Default</option>
+          <option value="name">Name</option>
+          <option value="current_episode">Episode</option>
+          <option value="total_episodes">Total</option>
+        </select>
+        <select id="order-select" class="select-input">
+          <option value="ASC">A→Z</option>
+          <option value="DESC">Z→A</option>
+        </select>
+        <select id="limit-select" class="select-input">
+          <option value="6">6 per page</option>
+          <option value="12" selected>12 per page</option>
+          <option value="24">24 per page</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Main Content ── -->
+  <main class="main-content">
+
+    <!-- Stats strip -->
+    <div class="stats-strip" id="stats-strip">
+      <div class="stat-item">
+        <span class="stat-value" id="stat-total">—</span>
+        <span class="stat-label">Series</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-value" id="stat-completed">—</span>
+        <span class="stat-label">Completed</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-value" id="stat-in-progress">—</span>
+        <span class="stat-label">In Progress</span>
+      </div>
+    </div>
+
+    <!-- Cards grid -->
+    <div class="series-grid" id="series-grid">
+      <div class="loading-state" id="loading-state">
+        <div class="spinner"></div>
+        <p>Loading series…</p>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state hidden" id="empty-state">
+      <div class="empty-icon">◈</div>
+      <h2>No series yet</h2>
+      <p>Add your first series to start tracking your watch progress.</p>
+      <button class="btn btn-primary" onclick="openCreateModal()">+ Add Series</button>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+  </main>
+
+  <!-- ── Modal: Create / Edit Series ── -->
+  <div class="modal-overlay hidden" id="series-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">New Series</h2>
+        <button class="modal-close" onclick="closeSeriesModal()">✕</button>
+      </div>
+      <form class="modal-body" id="series-form" onsubmit="return false">
+        <input type="hidden" id="edit-id" value="" />
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Title <span class="required">*</span></label>
+            <input type="text" id="field-name" class="form-input" placeholder="e.g. Breaking Bad" />
+            <span class="field-error" id="err-name"></span>
+          </div>
+        </div>
+
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label class="form-label">Current Episode</label>
+            <input type="number" id="field-current" class="form-input" min="0" value="1" />
+            <span class="field-error" id="err-current"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total Episodes <span class="required">*</span></label>
+            <input type="number" id="field-total" class="form-input" min="1" placeholder="62" />
+            <span class="field-error" id="err-total"></span>
+          </div>
+        </div>
+
+        <div class="form-group" id="image-group">
+          <label class="form-label">Cover Image</label>
+          <div class="image-upload-area" id="image-upload-area">
+            <div class="upload-placeholder" id="upload-placeholder">
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <path d="M21 15l-5-5L5 21"/>
+              </svg>
+              <p>Click to upload image</p>
+              <small>JPG, PNG, WebP — max 1MB</small>
+            </div>
+            <img class="upload-preview hidden" id="upload-preview" alt="Preview" />
+            <input type="file" id="field-image" accept="image/jpeg,image/png,image/webp,image/gif" />
+          </div>
+        </div>
+
+        <span class="field-error" id="err-general"></span>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" onclick="closeSeriesModal()">Cancel</button>
+          <button type="button" class="btn btn-primary" id="btn-save-series" onclick="saveSeries()">
+            <span id="save-label">Save Series</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Modal: Rating ── -->
+  <div class="modal-overlay hidden" id="rating-modal">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h2 class="modal-title">Rate this Series</h2>
+        <button class="modal-close" onclick="closeRatingModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="rating-series-name" id="rating-series-name"></p>
+
+        <div class="star-rating" id="star-rating">
+          <!-- Stars generated by JS -->
+        </div>
+        <div class="score-display">Score: <span id="score-display-value">—</span> / 10</div>
+
+        <div class="form-group" style="margin-top:1rem">
+          <label class="form-label">Comment (optional)</label>
+          <textarea id="rating-comment" class="form-input form-textarea" placeholder="What did you think?"></textarea>
+        </div>
+
+        <div class="ratings-history" id="ratings-history"></div>
+
+        <div class="modal-actions">
+          <button class="btn btn-ghost" onclick="closeRatingModal()">Close</button>
+          <button class="btn btn-primary" onclick="submitRating()">Submit Rating</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/export.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
