@@ -6,7 +6,7 @@
  * Toda petición va a BASE_URL para que sea fácil cambiar el host en producción.
  */
 
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "https://proyectowebbackend-production-1617.up.railway.app/api";
 
 /**
  * Wrapper genérico sobre fetch que:
