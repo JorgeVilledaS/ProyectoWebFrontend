@@ -1,44 +1,17 @@
 # FRONTEND de proyecto full stack de Programación Web
 
 **Backend repo:** https://github.com/JorgeVilledaS/ProyectoWebBackend
-**Live app:** Aún en Local
+**Live app:** https://proyecto-web-frontend-5gl5860lf-jorgevilledas-projects.vercel.app/ 
 
 ---
 
 ## Screenshot
 
-PENDIENTE
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ccf949bd-f239-4ae4-b3a0-6a8ca9b4a442" />
 
----
+## Screenshot del Deploy en Vercel
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/dda0c305-0aa9-4c26-89a4-c3254c6e92d9" />
 
-## Correr Localmente
-
-### 1. Asegurarse de que Backend esté corriendo
-
-El frontend se comunica con `http://localhost:8080`. Inicia primero el backend (ver el README del backend).
-
-### 2. Servir el frontend
-
-El frontend es HTML/CSS/JS estático — solo necesita un servidor HTTP local. Las opciones más sencillas:
-
-**Option A — VS Code Live Server extension**  
-Open the folder in VS Code, right-click `index.html` → "Open with Live Server".
-
-**Option B — Python**
-```bash
-cd series-tracker-frontend
-python3 -m http.server 3000
-```
-Then open `http://localhost:3000`.
-
-**Option C — Node.js `serve`**
-```bash
-npx serve .
-```
-
-> ⚠️ Don't open `index.html` directly as `file://` — the browser will block `fetch()` requests due to CORS and same-origin policies.
-
----
 
 ## Estructura del Proyecto
 
@@ -96,7 +69,7 @@ El frontend envía automáticamente una solicitud previa `OPTIONS` (preflight) a
 
 ---
 
-## Reflection
+## Reflexión
 
 ¿Volvería a usar este stack?
 
