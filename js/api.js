@@ -6,7 +6,9 @@
  * Toda petición va a BASE_URL para que sea fácil cambiar el host en producción.
  */
 
-const BASE_URL = "https://proyectowebbackend-production-1617.up.railway.app/api";
+const BASE_URL = "https://proyectowebbackend-production-1617.up.railway.app";
+
+const API_URL = `${BASE_URL}/api`;
 
 /**
  * Wrapper genérico sobre fetch que:
