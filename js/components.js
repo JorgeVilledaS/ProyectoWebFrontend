@@ -46,7 +46,7 @@ function buildCard(s) {
   // Imagen o placeholder con inicial
   const initial = s.name.trim().charAt(0).toUpperCase();
   const posterHTML = s.image_url
-    ? `<img class="card-poster" src="http://localhost:8080${s.image_url}" alt="${escapeHTML(s.name)}" loading="lazy" />`
+    ? `<img class="card-poster" src="${BASE_URL}${s.image_url}" alt="${escapeHTML(s.name)}" loading="lazy" />`
     : `<div class="card-poster-placeholder">${initial}</div>`;
 
   // Estrellas basadas en el rating promedio (escala 1-10 → 5 estrellas)
